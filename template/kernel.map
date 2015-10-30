@@ -1,0 +1,205 @@
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+*default*        0x00000000         0xffffffff
+
+Linker script and memory map
+
+LOAD build/initializeController.o
+LOAD build/player.o
+LOAD build/jtag.o
+LOAD build/framebuffer.o
+LOAD build/wall.o
+LOAD build/main.o
+LOAD build/drawbox.o
+LOAD build/enemy.o
+
+.init           0x00008000        0x4
+ *(.init)
+ .init          0x00008000        0x4 build/main.o
+                0x00008000                gogo
+
+.data           0x00009080     0x13b0
+ *(.data)
+ .data          0x00009080      0x800 build/initializeController.o
+ .data          0x00009880       0x50 build/player.o
+                0x00009880                Player
+ .data          0x000098d0        0x0 build/jtag.o
+ .data          0x000098d0       0x30 build/framebuffer.o
+ .data          0x00009900       0xf0 build/wall.o
+                0x00009900                Wall1
+                0x00009914                Wall2
+                0x00009928                Wall3
+                0x0000993c                Wall4
+                0x00009950                Wall5
+                0x00009964                Wall6
+ .data          0x000099f0       0x10 build/main.o
+                0x000099f4                gameState
+ .data          0x00009a00      0x890 build/drawbox.o
+ .data          0x0000a290      0x1a0 build/enemy.o
+                0x0000a290                Pawn
+                0x0000a2c4                Knight
+                0x0000a2f8                QueenA
+                0x0000a32c                QueenB
+ *.c.o(*)
+
+.igot.plt       0x0000a430        0x0
+ .igot.plt      0x00000000        0x0 build/initializeController.o
+
+.text           0x0000a430     0x12d0
+ *.c.o(.text)
+ *(.text)
+ .text          0x0000a430      0x118 build/initializeController.o
+                0x0000a430                initializeController
+                0x0000a498                writeLat
+                0x0000a4c0                writeClk
+                0x0000a4e8                readSNES
+                0x0000a518                waitFunction
+ .text          0x0000a548      0x3b4 build/player.o
+                0x0000a548                drawPlayer
+                0x0000a580                moveLeft
+                0x0000a5b8                moveRight
+                0x0000a5f8                moveUp
+                0x0000a630                moveDown
+                0x0000a670                moveBullet
+                0x0000a6ec                shootBullet
+                0x0000a734                PlayerVsWorld
+                0x0000a7f0                changeHealth
+                0x0000a818                PlayerHit
+                0x0000a89c                resetPlayer
+ .text          0x0000a8fc       0x8c build/jtag.o
+                0x0000a8fc                EnableJTAG
+ .text          0x0000a988       0x64 build/framebuffer.o
+                0x0000a988                InitFrameBuffer
+ .text          0x0000a9ec      0x120 build/wall.o
+                0x0000a9ec                BarrierCollision
+                0x0000aaa4                drawBarrier
+                0x0000aad8                resetWalls
+ .text          0x0000ab0c      0x424 build/main.o
+ .text          0x0000af30      0x430 build/drawbox.o
+                0x0000af30                drawPixel
+                0x0000af48                drawHoLine
+                0x0000af6c                drawVeLine
+                0x0000af90                drawObject
+                0x0000afc0                drawBorder
+                0x0000b02c                DrawChar
+                0x0000b080                namesAndTitle
+                0x0000b0bc                printLose
+                0x0000b0e8                printWin
+                0x0000b114                drawResume
+                0x0000b140                drawRestart
+                0x0000b16c                drawQuit
+                0x0000b198                drawMessageBox
+                0x0000b1fc                clsmsgbx
+                0x0000b260                drawArrow
+                0x0000b28c                drawscore
+                0x0000b304                clearscore
+ .text          0x0000b360      0x3a0 build/enemy.o
+                0x0000b360                drawObj
+                0x0000b3a4                UnitVsWorld
+                0x0000b438                moveEBullet
+                0x0000b4ac                moveUnit
+                0x0000b510                checkWin
+                0x0000b554                EShootBullet
+                0x0000b5b4                UnitHit
+                0x0000b69c                resetEnemy
+OUTPUT(build/output.elf elf32-littlearm)
+
+.glue_7         0x0000b700        0x0
+ .glue_7        0x00000000        0x0 linker stubs
+
+.glue_7t        0x0000b700        0x0
+ .glue_7t       0x00000000        0x0 linker stubs
+
+.vfp11_veneer   0x0000b700        0x0
+ .vfp11_veneer  0x00000000        0x0 linker stubs
+
+.v4_bx          0x0000b700        0x0
+ .v4_bx         0x00000000        0x0 linker stubs
+
+.iplt           0x0000b700        0x0
+ .iplt          0x00000000        0x0 build/initializeController.o
+
+.rel.dyn        0x0000b700        0x0
+ .rel.iplt      0x00000000        0x0 build/initializeController.o
+
+.bss            0x0000b700        0x0
+ .bss           0x0000b700        0x0 build/initializeController.o
+ .bss           0x0000b700        0x0 build/player.o
+ .bss           0x0000b700        0x0 build/jtag.o
+ .bss           0x0000b700        0x0 build/framebuffer.o
+ .bss           0x0000b700        0x0 build/wall.o
+ .bss           0x0000b700        0x0 build/main.o
+ .bss           0x0000b700        0x0 build/drawbox.o
+ .bss           0x0000b700        0x0 build/enemy.o
+
+.ARM.attributes
+                0x00000000       0x26
+ .ARM.attributes
+                0x00000000       0x26 build/initializeController.o
+ .ARM.attributes
+                0x00000026       0x26 build/player.o
+ .ARM.attributes
+                0x0000004c       0x26 build/jtag.o
+ .ARM.attributes
+                0x00000072       0x26 build/framebuffer.o
+ .ARM.attributes
+                0x00000098       0x26 build/wall.o
+ .ARM.attributes
+                0x000000be       0x26 build/main.o
+ .ARM.attributes
+                0x000000e4       0x26 build/drawbox.o
+ .ARM.attributes
+                0x0000010a       0x26 build/enemy.o
+
+.debug_line     0x00000000      0x702
+ .debug_line    0x00000000       0x98 build/initializeController.o
+ .debug_line    0x00000098      0x135 build/player.o
+ .debug_line    0x000001cd       0x61 build/jtag.o
+ .debug_line    0x0000022e       0x5f build/framebuffer.o
+ .debug_line    0x0000028d       0x86 build/wall.o
+ .debug_line    0x00000313      0x15e build/main.o
+ .debug_line    0x00000471      0x161 build/drawbox.o
+ .debug_line    0x000005d2      0x130 build/enemy.o
+
+.debug_info     0x00000000      0x309
+ .debug_info    0x00000000       0x6e build/initializeController.o
+ .debug_info    0x0000006e       0x60 build/player.o
+ .debug_info    0x000000ce       0x5e build/jtag.o
+ .debug_info    0x0000012c       0x65 build/framebuffer.o
+ .debug_info    0x00000191       0x5e build/wall.o
+ .debug_info    0x000001ef       0x5a build/main.o
+ .debug_info    0x00000249       0x61 build/drawbox.o
+ .debug_info    0x000002aa       0x5f build/enemy.o
+
+.debug_abbrev   0x00000000       0x9e
+ .debug_abbrev  0x00000000       0x14 build/initializeController.o
+ .debug_abbrev  0x00000014       0x14 build/player.o
+ .debug_abbrev  0x00000028       0x14 build/jtag.o
+ .debug_abbrev  0x0000003c       0x14 build/framebuffer.o
+ .debug_abbrev  0x00000050       0x14 build/wall.o
+ .debug_abbrev  0x00000064       0x12 build/main.o
+ .debug_abbrev  0x00000076       0x14 build/drawbox.o
+ .debug_abbrev  0x0000008a       0x14 build/enemy.o
+
+.debug_aranges  0x00000000      0x108
+ .debug_aranges
+                0x00000000       0x20 build/initializeController.o
+ .debug_aranges
+                0x00000020       0x20 build/player.o
+ .debug_aranges
+                0x00000040       0x20 build/jtag.o
+ .debug_aranges
+                0x00000060       0x20 build/framebuffer.o
+ .debug_aranges
+                0x00000080       0x20 build/wall.o
+ .debug_aranges
+                0x000000a0       0x28 build/main.o
+ .debug_aranges
+                0x000000c8       0x20 build/drawbox.o
+ .debug_aranges
+                0x000000e8       0x20 build/enemy.o
+
+.debug_ranges   0x00000000       0x20
+ .debug_ranges  0x00000000       0x20 build/main.o

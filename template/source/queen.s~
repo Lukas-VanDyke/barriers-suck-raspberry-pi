@@ -1,0 +1,175 @@
+
+.global hitsam
+hitsam:
+	push	{lr}
+	ldr 	r10, =xpos
+	ldr 	r1, [r10]
+	ldr 	r10, =ypos
+	ldr	r2, [r10]
+	add	r1, #-1
+	cmp	r3, r1
+	blo	no	
+	ldr 	r10, =fat
+	ldr	r11, [r10]
+	add	r1, r11
+	cmp	r3, r1
+	bhi	no
+	cmp	r4, r2
+	blo	no
+	ldr 	r10, =tall
+	ldr	r11, [r10]
+	add	r2, r11
+	cmp	r4, r2
+	bhi	no
+	mov	r11, #1
+	ldr	r10, =beef
+	ldr	r8, [r10]
+	add	r8, #-10
+	str	r8, [r10]
+	cmp	r8, #0
+	beq	deads
+	mov	r11, #1
+	pop	{lr}
+	bx	lr
+no:	mov	r11, #0
+	pop	{lr}
+	bx	lr
+
+deads:	bl 	clearsam
+	ldr 	r10, =fat
+	mov 	r8, #0
+	str	r8, [r10]
+	ldr	r10, =xpos
+	mov	r8, #0
+	str	r8, [r10]
+	ldr	r10, =ypos
+	str	r8, [r10]
+	ldr	r10, =tall
+	mov 	r8, #0
+	str	r8, [r10]
+	mov 	r11, #1
+	mov	r1, #100
+	bl	makelukaspowerful
+	pop	{lr}
+	bx 	lr
+
+.global movesam	
+movesam:
+	push 	{lr}
+	bl 	clearsam
+	ldr 	r11, =xpos
+	ldr	r10, [r11]
+	ldr	r11, =directions
+	ldr	r1, [r11]
+	cmp	r1, #0
+	bne	sright
+sleft:	add 	r10, #-1
+	cmp	r10, #100
+	blo	switchr2
+	b	ksgo
+sright:	add	r10, #1
+	cmp	r10, #924
+	bhi	switchl2
+	b	ksgo
+switchl2:
+	mov	r1, #0
+	str 	r1, [r11]
+	b	ksgo
+switchr2:
+	mov	r1, #1
+	str	r1, [r11]
+ksgo:	ldr 	r11, =xpos
+	str	r10, [r11]
+	bl 	drawsam
+	pop 	{lr}	
+	bx	lr
+
+
+
+.global shootSamBullet
+shootSamBullet:
+	push 	{lr}
+	ldr 	r10, =beef
+	ldr 	r6, [r10]
+	cmp 	r6, #0
+	beq 	dontShoot
+	ldr 	r10, =btall
+	ldr 	r4, [r10]
+	cmp 	r4, #0
+	bne 	dontShoot
+	mov 	r3, #5
+	str 	r3, [r10]
+	ldr 	r10, =bfat
+	str 	r3, [r10]
+	ldr 	r10, =xpos
+	ldr 	r1, [r10]
+	add 	r1, #10
+	ldr 	r10, =ypos
+	ldr	r2, [r10]
+	add 	r2, #21
+	ldr 	r10, =bxpos
+	str 	r1, [r10]
+	ldr 	r10, =bypos
+	str 	r2, [r10]
+	bl 	drawSamBullet
+dontShoot:
+	pop 	{lr}
+	bx 	lr
+	
+.global moveSamBullet
+moveSamBullet:
+	push 	{lr}
+	ldr 	r10, =btall
+	ldr 	r8, [r10]
+	cmp 	r8, #0
+	beq 	else
+	bl 	clearSamBullet
+	ldr	r10, =bypos
+	ldr	r2, [r10]
+	add	r2, #3
+	cmp 	r2, #724
+	bge 	deleteSamBullet
+	str	r2, [r10]
+	bl	drawSamBullet
+	b 	else
+deleteSamBullet:
+	bl	clearSamBullet
+	ldr 	r10, =btall
+	mov 	r3, #0
+	str 	r3, [r10]
+	ldr 	r10, =bfat
+	str 	r3, [r10]
+	mov 	r1, #1000
+	ldr 	r10, =bxpos
+	str 	r1, [r10]
+	ldr 	r10, =bypos
+	str 	r1, [r10]
+	mov 	r11, #1
+else:
+	pop 	{lr}
+	bx 	lr
+
+
+.section .data
+.align 4
+
+fat:	.int	21			// X Resolution (width)
+tall:	.int	21			// Y Resolution (height)
+fat2:	.int	21			// X Resolution (width)
+tall2:	.int	21			// Y Resolution (height)
+beef:	.int	100			// HP sam
+beef2:	.int	100			// HP adarsh
+xpos:	.int	524			// X
+xpos2:	.int	524			// X
+ypos:	.int	60			// Y
+ypos2: 	.int 	105
+bfat: 	.int 	0			// bullet ^ shit 
+btall: 	.int 	0			//
+bfat2: 	.int 	0			// bullet ^ shit 
+btall2: .int 	0			//
+bxpos: 	.int 	475			//
+bxpos2: .int 	475		//
+bypos: 	.int 	675			//
+bypos2: .int 	675		//
+directiona:	.int	0		// 0 = left 1 = right
+directions:	.int 	1
