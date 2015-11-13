@@ -1,4 +1,4 @@
-Gameplay win video: https://www.youtube.com/watch?v=2KcMQ176mSY
+Gameplay demo video: https://www.youtube.com/watch?edit=vd&v=ad8mOvHWIF8
 
 This game uses a snes controller as the input device.
 
